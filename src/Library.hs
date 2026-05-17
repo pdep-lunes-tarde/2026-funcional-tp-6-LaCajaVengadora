@@ -2,7 +2,7 @@ module Library where
 import PdePreludat
 
 data Ingrediente =
-    Carne | Pan | Panceta | Cheddar | Pollo | Curry | QuesoDeAlmendras
+    Carne | Pan | Panceta | Cheddar | Pollo | Curry | QuesoDeAlmendras | Papas
     deriving (Eq, Show)
 
 precioIngrediente :: Ingrediente -> Number
@@ -13,6 +13,7 @@ precioIngrediente Cheddar = 10
 precioIngrediente Pollo =  10
 precioIngrediente Curry = 5
 precioIngrediente QuesoDeAlmendras = 15
+precioIngrediente Papas = 10
 
 data Hamburguesa = Hamburguesa {
     precioBase :: Number,
@@ -21,6 +22,7 @@ data Hamburguesa = Hamburguesa {
 
 cuartoDeLibra :: Hamburguesa
 cuartoDeLibra = Hamburguesa {precioBase = 20, ingredientes = [Pan, Carne, Cheddar, Pan]}
+
 
 
 -------------------- PARTE 1 --------------------
@@ -36,11 +38,31 @@ agrandar burger
 descuento :: Number -> Hamburguesa -> Hamburguesa
 descuento porcentaje burger = burger {precioBase = (1 - porcentaje/100) * precioBase burger}
 
+
 pdepBurger :: Hamburguesa
 pdepBurger = descuento 20 . agregarIngrediente Panceta . agregarIngrediente Cheddar . agrandar . agrandar $ cuartoDeLibra
--- >>> pdepBurger
--- Hamburguesa {precioBase = 16, ingredientes = [Panceta,Cheddar,Carne,Carne,Pan,Carne,Cheddar,Pan]}
 
-{- descuento: recibe un % de descuento, y devuelve la hamburguesa con ese descuento aplicado al precio base.
-la pdepBurger, que es un cuarto de libra agrandado 2 veces con panceta, cheddar y 20% de descuento. Su precio final deberia ser 110. -}
-{- agrandar: cada vez que se agranda una hamburguesa se agrega otro ingrediente base (por ahora, son Carne o Pollo), se elige el ingrediente base a agregar según lo que ya haya en la hamburguesa (si había carne se agrega carne, si había pollo se agrega pollo, si había ambos da igual cuál se agregue). -}
+
+precioIngredientes :: Hamburguesa -> Number
+precioIngredientes burger = sum . map (precioIngrediente) . ingredientes $ burger
+
+precioFinal :: Hamburguesa -> Number
+precioFinal burger = precioBase burger + precioIngredientes burger
+
+
+
+-------------------- PARTE 2 --------------------
+
+dobleCuarto :: Hamburguesa
+dobleCuarto = agregarIngrediente Cheddar . agrandar $ cuartoDeLibra
+
+bigPdep :: Hamburguesa
+bigPdep = agregarIngrediente Curry dobleCuarto
+
+delDia :: Hamburguesa -> Hamburguesa
+delDia burger = descuento 30 . agregarIngrediente Papas $ burger
+
+
+
+-------------------- PARTE 3 --------------------
+
