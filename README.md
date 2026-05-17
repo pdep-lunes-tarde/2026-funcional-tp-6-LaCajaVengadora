@@ -11,8 +11,8 @@
 
 ## Nombre y legajo
 
-- Legajo: **Completar** 
-- Nombre: **Completar**
+- Legajo: *2330076* 
+- Nombre: *Lorenzo Oviedo Cerdeira*
 
 ## El enunciado
 
